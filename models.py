@@ -13,6 +13,9 @@ class Image(db.Model):
         primary_key=True,
         autoincrement=True
     )
+    tag = db.Column(
+        db.String
+    )
 
     make = db.Column(
         db.String
@@ -38,4 +41,3 @@ class Image(db.Model):
 def connect_db(app):
     db.app = app
     db.init_app(app)
-

@@ -22,13 +22,15 @@ class FlaskTestCase(TestCase):
         # User model below.
         Image.query.delete()
         self.client = app.test_client()
-        test_image = Image(make="testmake1",
+        test_image = Image(tag="",
+                           make="testmake1",
                            model="testmodel1",
                            latitude="testlat",
                            longitude="",
                            file_size="",
                            MIME_type="")
-        second_image = Image(make="",
+        second_image = Image(tag="",
+                             make="",
                              model="",
                              latitude="",
                              longitude="",
@@ -38,6 +40,15 @@ class FlaskTestCase(TestCase):
         db.session.add_all([test_image, second_image])
         db.session.commit()
 
+        self.test_image_id = test_image.id
+        self.second_image_id = second_image.id
+        self.tag = test_image.tag
+
+
+    def tearDown(self):
+        """Clean up any fouled transaction."""
+        db.session.rollback()
+
     def test_get_images(self):
         with self.client as c:
             resp = c.get("/images")
@@ -45,8 +56,10 @@ class FlaskTestCase(TestCase):
 
     def test_get_images_by_id(self):
         with self.client as c:
-            resp = c.get(f"/images/{self.test_image.id}")
+            resp = c.get(f'/images/{self.test_image_id}')
             self.assertEqual(resp.status_code, 200)
 
-    def tearDown(self):
-        db.session.rollback()
+    def test_get_images_by_tag(self):
+        with self.client as c:
+            resp = c.get(f'/images/{self.tag}')
+            self.assertEqual(resp.status_code, 200)

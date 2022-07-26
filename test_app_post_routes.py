@@ -38,6 +38,11 @@ class FlaskTestCase(TestCase):
         db.session.add_all([test_image, second_image])
         db.session.commit()
 
+
+    def tearDown(self):
+        """Clean up any fouled transaction."""
+        db.session.rollback()
+
     def test_list_images(self):
         with self.client as c:
             resp = c.post("/images/upload", data={"make": "testmake1",
@@ -47,6 +52,3 @@ class FlaskTestCase(TestCase):
                                                   "file_size": "",
                                                   "MIME_type": ""})
             self.assertEqual(resp.status_code, 302)
-
-    def tearDown(self):
-        db.session.rollback()

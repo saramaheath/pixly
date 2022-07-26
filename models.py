@@ -4,33 +4,38 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class Image(db.model):
+class Image(db.Model):
     """ image metadata information"""
     __tablename__ = 'images'
 
     id = db.Column(
         db.Integer,
         primary_key=True,
-        auto_increment=True
+        autoincrement=True
     )
 
     make = db.Column(
-        db.string
+        db.String
     )
     model = db.Column(
-        db.string
+        db.String
     )
     latitude = db.Column(
-        db.string
+        db.String
     )
 
     longitude = db.Column(
-        db.string
+        db.String
     )
 
     file_size = db.Column(
-        db.string
+        db.String
     )
     MIME_type = db.Column(
-        db.string
+        db.String
     )
+
+def connect_db(app):
+    db.app = app
+    db.init_app(app)
+

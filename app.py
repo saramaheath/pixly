@@ -1,12 +1,12 @@
 import os
 from dotenv import load_dotenv
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, MessageForm, CSRFProtectForm, UserEditForm
-from models import db, connect_db, User, Message
+
+from models import db, connect_db
 
 load_dotenv()
 
@@ -45,6 +45,3 @@ def get_images_by_tag():
 @app.patch('/images/<int:image_id>')
 def edit_image():
     """edits image, return json of that new image data"""
-
-
-

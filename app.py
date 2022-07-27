@@ -1,5 +1,6 @@
+from email.mime import image
 import os
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
@@ -11,16 +12,19 @@ import boto3
 from werkzeug.utils import secure_filename
 from models import db, connect_db
 
-# load_dotenv()
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000'])
 
+#print(os.environ.keys()) 
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
-AWS_SECRET_KEY = os.environ['AWSSecretKey']
-AWS_ACCESS_KEY_ID = os.environ['AWSAccessKeyId']
-BUCKET_NAME = os.environ['BucketName']
+BASE_URL = 'https://r26sarapixly.s3.us-east-2.amazonaws.com/'
+
+AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
+AWS_ACCESS_KEY_ID = os.environ['AWS_SECRET_KEY_ID']
+BUCKET_NAME = os.environ['BUCKET_NAME']
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///pixly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
@@ -51,14 +55,15 @@ def upload():
         img = request.files['file']
         if img:
                 filename = secure_filename(img.filename)
-
+                img.save(filename)
                 s3.upload_file(
                     Bucket = BUCKET_NAME ,
                     Filename=filename,
                     Key = filename
                 )
+                image_source = f"{BASE_URL}{filename}"
                 msg = "Upload Done ! "
-    return render_template("form.html",msg =msg)
+    return render_template("form.html",msg =msg, image_source=image_source)
 if __name__ == "__main__":
 
     app.run(debug=True)

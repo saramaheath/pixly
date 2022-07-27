@@ -1,7 +1,7 @@
 import os
 #from dotenv import load_dotenv
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from PIL import Image
@@ -33,40 +33,40 @@ def get_images():
     #request to aws for images
 
 
-
-
 @app.post('/images/upload')
 def add_image():
     """adds image to database and s3, returns image to display to user,
     confirming image was added"""
+    str = "Hello"
+
+    return jsonify(str)
     #thepythoncode.com/article/extracting-image-metadata-in-python
     # needs file name like: 'image.jpg' for the open function call argument
-    image = Image.open()
-    #check what image has for data at this point before getexif()?
-    print(image)
+    # image = Image.open()
+    # #check what image has for data at this point before getexif()?
+    # print(image)
 
-    # image_data = {
-    #     "tag": image.tag,
-    #     "make": image.make,
-    #     "model": image.model,
-    #     "latitude": image.latitude,
-    #     "longitude": image.longitude,
-    #     "file_size": image.file_size,
-    #     "MIME_type": image.MIME_type
-    # }
-    # for label,value in image_data.items():
+    # # image_data = {
+    # #     "tag": image.tag,
+    # #     "make": image.make,
+    # #     "model": image.model,
+    # #     "latitude": image.latitude,
+    # #     "longitude": image.longitude,
+    # #     "file_size": image.file_size,
+    # #     "MIME_type": image.MIME_type
+    # # }
+    # # for label,value in image_data.items():
 
-    exifdata = image.getexif()
+    # exifdata = image.getexif()
 
-    for tag_id in exifdata:
-    # get the tag name, instead of human unreadable tag id
-        tag = TAGS.get(tag_id, tag_id)
-        data = exifdata.get(tag_id)
-    # decode bytes
-    if isinstance(data, bytes):
-        data = data.decode()
-    print(f"{tag:25}: {data}")
-
+    # for tag_id in exifdata:
+    # # get the tag name, instead of human unreadable tag id
+    #     tag = TAGS.get(tag_id, tag_id)
+    #     data = exifdata.get(tag_id)
+    # # decode bytes
+    # if isinstance(data, bytes):
+    #     data = data.decode()
+    # print(f"{tag:25}: {data}")
     #image_data = { tag, make, model, latitude, longitude, file_size, MIME_type }
 
 

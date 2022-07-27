@@ -17,7 +17,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000'])
 
-#print(os.environ.keys()) 
+#print(os.environ.keys())
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 BASE_URL = 'https://r26sarapixly.s3.us-east-2.amazonaws.com/'
@@ -52,6 +52,7 @@ def get_images():
 @app.route('/upload',methods=['post'])
 def upload():
     if request.method == 'POST':
+        print(request.form['file'],"*******************************")
         img = request.files['file']
         if img:
                 filename = secure_filename(img.filename)

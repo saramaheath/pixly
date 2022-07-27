@@ -1,7 +1,7 @@
 import os
 #from dotenv import load_dotenv
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
@@ -18,33 +18,57 @@ CORS(app, origins=['http://localhost:3000'])
 
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
-
+AWS_SECRET_KEY = os.environ['AWSSecretKey']
+AWS_ACCESS_KEY_ID = os.environ['AWSAccessKeyId']
+BUCKET_NAME = os.environ['BucketName']
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///pixly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-os.environ['SECRET_KEY']
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 toolbar = DebugToolbarExtension(app)
 
 s3 = boto3.client('s3',
-                    aws_access_key_id='access key here',
-                    aws_secret_access_key= 'secret key here',
-                    aws_session_token='secret token here'
+                    aws_access_key_id = AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key = AWS_SECRET_KEY
+
                      )
 
-#BUCKET_NAME = os.environ['ENV_BUCKET_NAME'] 
+#BUCKET_NAME = os.environ['ENV_BUCKET_NAME']
 connect_db(app)
 
+@app.route('/')
+def home():
+    return render_template("form.html")
 
 @app.get('/images')
 def get_images():
     """return json of all images"""
     #request to aws for images
 
+@app.route('/upload',methods=['post'])
+def upload():
+    if request.method == 'POST':
+        img = request.files['file']
+        if img:
+                filename = secure_filename(img.filename)
 
-@app.post('/images/upload')
-def add_image():
-    """adds image to database and s3, returns image to display to user,
-    confirming image was added"""
+                s3.upload_file(
+                    Bucket = BUCKET_NAME ,
+                    Filename=filename,
+                    Key = filename
+                )
+                msg = "Upload Done ! "
+    return render_template("form.html",msg =msg)
+if __name__ == "__main__":
+
+    app.run(debug=True)
+
+# @app.post('/images/upload')
+# def add_image():
+#     """adds image to database and s3, returns image to display to user,
+#     confirming image was added"""
+
+
     # img = request.files['file']
     # if img:
     #             filename = secure_filename(img.filename)
@@ -55,7 +79,7 @@ def add_image():
     #                 Key = filename
     #             )
     #             msg = "Upload Done!"
-    return jsonify('hi')
+    # return jsonify('hi')
 
 
 

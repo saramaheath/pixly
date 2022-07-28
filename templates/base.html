@@ -19,7 +19,7 @@
 
 <body class="{% block body_class %}{% endblock %}">
 
-  <nav class="navbar navbar-expand">
+  <nav class="navbar navbar--expand-md mb-4">
     <div class="container-fluid">
 
       <div class="navbar-header">
@@ -28,6 +28,19 @@
           <span>Pixly</span>
         </a>
       </div>
+
+      <form class="file-input" action="/upload" method="post" enctype="multipart/form-data">
+          <input type="file" id="file" name="file" value="file" class="file"  />
+          <label for="file">Select File</label>
+          <input type="submit" name="upload" value="Upload" id="upload"  />
+          <label for="upload"> Upload</label>
+
+        </div>
+
+
+
+      </form>
+
 
     </div>
   </nav>

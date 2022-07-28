@@ -1,0 +1,17 @@
+.logo-image {
+    width: 100px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.full-list {
+    display: flex;
+    justify-content: center;
+}
+
+.card-body {
+    display: flex;
+    justify-content: center;
+}

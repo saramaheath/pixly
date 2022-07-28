@@ -1,18 +1,28 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
-<div>
-  {% for url in image_urls %}
-      <image src="{{ url }}"></image>
-  {% endfor %}
+<div class="full-list">
+  <ul>
+    {% for url in image_urls %}
+    <li>
+      <div class="card" style="width: 44rem">
+        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+        <div class="card-body">
+          <image class="list-image" src="{{ url }}"></image>
+          <a class="card-link btn btn-info" href=""
+            ><i class='fas fa-align-justify fa-lg' style='color:#262726'></i></i></a>
+        </div>
+      </div>
+    </li>
+
+    {% endfor %}
+  </ul>
 </div>
-
 
 <form action="/upload" method="post" enctype="multipart/form-data">
   <p class="card-text">Choose a file to upload it to AWS S3</p>
-     <input type="file" name="file" value="file">
-     <hr>
-<input type="submit" name="upload" value="Upload" class="btn btn-success">
+  <input type="file" name="file" value="file" />
+  <hr />
+  <input type="submit" name="upload" value="Upload" class="btn btn-success" />
 </form>
 {{msg}}
 

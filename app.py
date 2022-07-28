@@ -20,8 +20,10 @@ CORS(app, origins=['http://localhost:3000'])
 #print(os.environ.keys())
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
-BASE_URL = 'https://pixly-rith-26-dan.s3.us-east-2.amazonaws.com/'
 
+#'https://pixly-rith-26-dan.s3.us-east-2.amazonaws.com/'
+
+BASE_URL = os.environ['BASE_URL']
 AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 AWS_ACCESS_KEY_ID = os.environ['AWS_SECRET_KEY_ID']
 BUCKET_NAME = os.environ['BUCKET_NAME']

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import JSON
 
 
 db = SQLAlchemy()
@@ -13,30 +14,17 @@ class Image(db.Model):
         primary_key=True,
         autoincrement=True
     )
-    tag = db.Column(
+    tags = db.Column(
         db.String
     )
-
-    make = db.Column(
+    
+    exif_data = db.Column(
+        db.JSON
+    )
+    filename = db.Column(
         db.String
     )
-    model = db.Column(
-        db.String
-    )
-    latitude = db.Column(
-        db.String
-    )
-
-    longitude = db.Column(
-        db.String
-    )
-
-    file_size = db.Column(
-        db.String
-    )
-    MIME_type = db.Column(
-        db.String
-    )
+  
 
 def connect_db(app):
     db.app = app

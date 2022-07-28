@@ -51,7 +51,6 @@ def get_images():
     image_urls = []
     for item in s3.list_objects(Bucket=BUCKET_NAME)['Contents']:
         image_urls.append(f"{BASE_URL}{item['Key']}")
-        print(image_urls, '++++++++++++++++++++++++++++')
 
     return render_template("home.html", image_urls=image_urls)
 

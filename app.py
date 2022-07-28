@@ -2,17 +2,18 @@ from contextlib import redirect_stderr
 from email.mime import image
 import os
 from dotenv import load_dotenv
+import json
 
 from flask import Flask, jsonify, request, render_template, redirect
 from flask_cors import CORS
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.postgresql import JSON
-from PIL import Image, ExifTags
+from PIL import Image, ExifTags, TiffImagePlugin
 from PIL.ExifTags import TAGS
 import boto3
 from werkzeug.utils import secure_filename
-from models import db, connect_db
+from models import db, connect_db, Photo
 
 load_dotenv()
 
@@ -72,19 +73,23 @@ def upload():
             msg = "Upload Done ! "
 
     image = Image.open(filename)
-    print(image, 'image^^^^^^^^^^')
-
     exifdata = image.getexif()
-    print(exifdata, 'exifdata&&&&&&&&&&&')
-
     exif_obj = {}
-
     # json object to store exif
     for key, val in exifdata.items():
         if key in ExifTags.TAGS:
+            if isinstance(val,TiffImagePlugin.IFDRational):
+                val = float(val)
             exif_obj[ExifTags.TAGS[key]] = val
+    json_object = json.dumps(exif_obj)
+    img = Photo(tags="lacrosse helmet",exif_data =json_object,filename=filename )
 
-    print(exif_obj, '!!!!!!!!!')
+    print(exif_obj)
+
+    db.session.add(img)
+    db.session.commit()
+
+
 
     return render_template("home.html", msg=msg, image_source=image_source)
 

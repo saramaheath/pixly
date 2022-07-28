@@ -20,7 +20,7 @@ CORS(app, origins=['http://localhost:3000'])
 #print(os.environ.keys())
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
-BASE_URL = 'https://r26sarapixly.s3.us-east-2.amazonaws.com/'
+BASE_URL = 'https://pixly-rith-26-dan.s3.us-east-2.amazonaws.com/'
 
 AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 AWS_ACCESS_KEY_ID = os.environ['AWS_SECRET_KEY_ID']
@@ -42,18 +42,18 @@ connect_db(app)
 
 @app.route('/')
 def home():
-    return render_template("form.html")
+    return render_template("home.html")
 
-@app.get('/images')
+@app.get('/list')
 def get_images():
     """return json of all images"""
     image_urls = []
     for item in s3.list_objects(Bucket=BUCKET_NAME)['Contents']:
         image_urls.append(f"{BASE_URL}{item['Key']}")
         print(image_urls, '++++++++++++++++++++++++++++')
-        
 
-    return render_template("list.html", image_urls=image_urls)
+
+    return render_template("home.html", image_urls=image_urls)
 
 @app.route('/upload',methods=['post'])
 def upload():
@@ -69,7 +69,7 @@ def upload():
                 )
                 image_source = f"{BASE_URL}{filename}"
                 msg = "Upload Done ! "
-    return render_template("form.html",msg =msg, image_source=image_source)
+    return render_template("home.html",msg =msg, image_source=image_source)
 if __name__ == "__main__":
 
     app.run(debug=True)

@@ -47,12 +47,17 @@ def home():
 @app.get('/images')
 def get_images():
     """return json of all images"""
-    #request to aws for images
+    image_urls = []
+    for item in s3.list_objects(Bucket=BUCKET_NAME)['Contents']:
+        image_urls.append(f"{BASE_URL}{item['Key']}")
+        print(image_urls, '++++++++++++++++++++++++++++')
+        
+
+    return render_template("list.html", image_urls=image_urls)
 
 @app.route('/upload',methods=['post'])
 def upload():
     if request.method == 'POST':
-        print(request.form['file'],"*******************************")
         img = request.files['file']
         if img:
                 filename = secure_filename(img.filename)

@@ -1,9 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 
-
 db = SQLAlchemy()
-
 
 class Photo(db.Model):
     """ image metadata information"""
@@ -24,7 +22,6 @@ class Photo(db.Model):
     filename = db.Column(
         db.String
     )
-
 
 def connect_db(app):
     db.app = app

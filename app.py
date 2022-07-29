@@ -20,9 +20,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000'])
 
-# Get DB_URI from environ variable (useful for production/testing) or,
-# if not set there, use development local db.
-
 BASE_URL = os.environ['BASE_URL']
 AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 AWS_ACCESS_KEY_ID = os.environ['AWS_SECRET_KEY_ID']
@@ -43,22 +40,22 @@ connect_db(app)
 
 @app.route('/')
 def home():
+    """redirects to '/list'"""
     return redirect('/list')
-
 
 @app.get('/list')
 def get_images():
-    """return json of all images"""
+    """Displays list of all images"""
     image_urls = []
     for item in s3.list_objects(Bucket=BUCKET_NAME)['Contents']:
         image_urls.append(f"{BASE_URL}{item['Key']}")
 
     return render_template("home.html", image_urls=image_urls)
 
-
 @app.route('/upload', methods=['post'])
 def upload():
-    """stores exif data into database, uploads image file to s3 bucket"""
+    """stores exif data into database, uploads image file to s3 bucket, 
+    displays page with list of images"""
     if request.method == 'POST':
         tag = request.form['tag']
         img = request.files['file']
@@ -75,33 +72,27 @@ def upload():
 
     image = Image.open(filename)
     exifdata = image.getexif()
-    exif_obj = {}
+    exif_dict = {}
 
     for key, val in exifdata.items():
         if key in ExifTags.TAGS:
             if isinstance(val, TiffImagePlugin.IFDRational):
                 val = float(val)
-            exif_obj[ExifTags.TAGS[key]] = val
+            exif_dict[ExifTags.TAGS[key]] = val
 
-    json_object = json.dumps(exif_obj)
-    img = Photo(tags=tag, exif_data=json_object, filename=filename)
+    json_dict = json.dumps(exif_dict)
+    img = Photo(tags=tag, exif_data=json_dict, filename=filename)
 
     db.session.add(img)
     db.session.commit()
 
     return render_template("home.html", msg=msg, image_source=image_source)
 
-@app.get('/images/<int:image_id>')
-def get_image():
-    """return image to display to user"""
-
-
 @app.get('/images')
 def get_images_by_tag():
-    """returns all images to display that share tag"""
+    """displays all images that share tag from search"""
     tag = request.args.get('search')
     image_instances = Photo.query.filter(Photo.tags.like(f"%{tag}%")).all()
-    #print(image_filenames, 'FILENAMES *********')
 
     image_urls = []
     for image in image_instances:
@@ -109,9 +100,6 @@ def get_images_by_tag():
         image_urls.append(f"{BASE_URL}{image_url}")
 
     return render_template("home.html", image_urls=image_urls)
-
-
-
 
 @app.patch('/images/<int:image_id>')
 def edit_image():

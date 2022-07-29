@@ -4,6 +4,7 @@
 form {
   display: flex;
   justify-content: right;
+  align-items: center;
 }
 body {
   background-color: black;

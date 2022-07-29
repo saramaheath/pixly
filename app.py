@@ -60,6 +60,7 @@ def get_images():
 def upload():
     """stores exif data into database, uploads image file to s3 bucket"""
     if request.method == 'POST':
+        tag = request.form['tag']
         img = request.files['file']
         if img:
             filename = secure_filename(img.filename)
@@ -75,51 +76,41 @@ def upload():
     image = Image.open(filename)
     exifdata = image.getexif()
     exif_obj = {}
-    # json object to store exif
+
     for key, val in exifdata.items():
         if key in ExifTags.TAGS:
-            if isinstance(val,TiffImagePlugin.IFDRational):
+            if isinstance(val, TiffImagePlugin.IFDRational):
                 val = float(val)
             exif_obj[ExifTags.TAGS[key]] = val
-    json_object = json.dumps(exif_obj)
-    img = Photo(tags="lacrosse helmet",exif_data =json_object,filename=filename )
 
-    print(exif_obj)
+    json_object = json.dumps(exif_obj)
+    img = Photo(tags=tag, exif_data=json_object, filename=filename)
 
     db.session.add(img)
     db.session.commit()
 
-
-
     return render_template("home.html", msg=msg, image_source=image_source)
-
-
-# @app.post('/images/upload')
-# def add_image():
-#     """adds image to database and s3, returns image to display to user,
-#     confirming image was added"""
-
-    # img = request.files['file']
-    # if img:
-    #             filename = secure_filename(img.filename)
-    #             img.save(filename)
-    #             s3.upload_file(
-    #                 Bucket = BUCKET_NAME,
-    #                 Filename=filename,
-    #                 Key = filename
-    #             )
-    #             msg = "Upload Done!"
-    # return jsonify('hi')
-
 
 @app.get('/images/<int:image_id>')
 def get_image():
     """return image to display to user"""
 
 
-@app.get('/images/<tag>')
+@app.get('/images')
 def get_images_by_tag():
     """returns all images to display that share tag"""
+    tag = request.args.get('search')
+    image_instances = Photo.query.filter(Photo.tags.like(f"%{tag}%")).all()
+    #print(image_filenames, 'FILENAMES *********')
+
+    image_urls = []
+    for image in image_instances:
+        image_url = image.filename
+        image_urls.append(f"{BASE_URL}{image_url}")
+
+    return render_template("home.html", image_urls=image_urls)
+
+
 
 
 @app.patch('/images/<int:image_id>')

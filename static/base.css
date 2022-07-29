@@ -1,81 +1,80 @@
 .logo-image {
-    width: 50px;
-
+  width: 50px;
 }
 form {
-    display: flex;
-    justify-content: right;
+  display: flex;
+  justify-content: right;
 }
 body {
-    background-color: black;
-  }
+  background-color: black;
+}
 
+.file-input label {
+  display: block;
+  position: relative;
+  width: 100px;
+  height: 40px;
+  border-radius: 25px;
+  background: linear-gradient(40deg, #ff6ec4, #7873f5);
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease-out;
+  margin: 10px;
+}
 
-.file-input label  {
-    display: block;
-    position: relative;
-    width: 100px;
-    height: 30px;
-    border-radius: 25px;
-    background: linear-gradient(40deg, #ff6ec4, #7873f5);
-    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform .2s ease-out;
-  }
-
+#tag.form-control {
+  height: 37px;
+}
 .file {
-    opacity: 0;
-    width: 0.1px;
-    height: 0.1px;
-    position: absolute;
-  }
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
+}
 
-
-
-
-
-
-
+.upload {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
+}
 
 ul {
-    list-style-type: none;
-    margin: 100px;
+  list-style-type: none;
+  margin: 100px;
 }
 
 .full-list {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-.card{
-    margin: 20px;
+.card {
+  margin: 20px;
 }
 .card-body {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-.navbar{
-    position: fixed;
+.navbar {
+  position: fixed;
 }
 .Nav {
-    top: 0;
-    width: 100%;
-    font-weight: bold;
-    height: 100px;
-
+  top: 0;
+  width: 100%;
+  font-weight: bold;
+  height: 100px;
 }
 
-
-
 nav {
-    background-color: #0dcaf0;
-    text-align: center;
-    font-weight: bold;
-    position: fixed;
-    z-index: 100;
-    width: 100%;
+  background-color: #0dcaf0;
+  text-align: center;
+  font-weight: bold;
+  position: fixed;
+  z-index: 100;
+  width: 100%;
 }

@@ -29,11 +29,22 @@
         </a>
       </div>
 
+        <div>
+          <form class="navbar-form navbar-end" action="/images">
+            <input name="search" class="form-control" placeholder="Search" aria-label="Search" id="search">
+            <button class="btn btn-default">
+              <span class="fa fa-search"></span>
+            </button>
+          </form>
+        </div>
+
       <form class="file-input" action="/upload" method="post" enctype="multipart/form-data">
           <input type="file" id="file" name="file" value="file" class="file"  />
           <label for="file">Select File</label>
-          <input type="submit" name="upload" value="Upload" id="upload"  />
+          <input type="submit" name="upload" value="Upload" id="upload" class="upload"  />
+          <input type="text" id="tag" name="tag" value="add tag" class="form-control"/>
           <label for="upload"> Upload</label>
+
 
         </div>
 
